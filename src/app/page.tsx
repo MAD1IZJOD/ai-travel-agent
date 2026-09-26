@@ -1,3 +1,4 @@
+import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TripPlanner } from "@/components/planner/TripPlanner";
 
@@ -16,6 +17,7 @@ export default function Home() {
         </section>
         <TripPlanner />
       </main>
+      <SiteFooter />
     </>
   );
 }
