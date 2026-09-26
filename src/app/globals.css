@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. A warm paper background with deep ink text, one primary
+ * accent (lagoon) and one secondary accent (clay). Status colours are reserved
+ * for constraint checks and source labels so they keep their meaning.
+ */
+:root {
+  --paper: #f7f4ee;
+  --surface: #ffffff;
+  --surface-muted: #f1ede5;
+  --ink: #1d1b18;
+  --ink-soft: #57524a;
+  --ink-faint: #8a847a;
+  --line: #e4ded3;
+  --line-strong: #d4ccbe;
+  --lagoon: #0f5f5c;
+  --lagoon-soft: #e3efed;
+  --clay: #b5532c;
+  --clay-soft: #f7e8df;
+  --ok: #2f7a45;
+  --ok-soft: #e6f2e8;
+  --warn: #a66a00;
+  --warn-soft: #fbf0d9;
+  --bad: #b3261e;
+  --bad-soft: #fbe7e5;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-lagoon: var(--lagoon);
+  --color-lagoon-soft: var(--lagoon-soft);
+  --color-clay: var(--clay);
+  --color-clay-soft: var(--clay-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--lagoon-soft);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--lagoon);
+  outline-offset: 2px;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise {
+  animation: rise-in 360ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-rise,
+  .animate-spin,
+  .animate-pulse {
+    animation: none !important;
+  }
+}
