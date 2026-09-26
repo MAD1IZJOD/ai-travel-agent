@@ -116,7 +116,7 @@ export interface DayPlan {
   day: number;
   date: string;
   title: string;
-  kind: "arrival" | "full" | "departure" | "arrival-departure";
+  kind: "arrival" | "full" | "departure" | "arrival-departure" | "travel";
   activities: PlannedActivity[];
   food: FoodPick[];
   stayName: string | null;
