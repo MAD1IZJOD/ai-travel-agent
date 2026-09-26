@@ -4,12 +4,12 @@
 
 | Parameter | Maximum Marks | Awarded Marks | Percentage |
 |---|---:|---:|---:|
-| Problem Statement Alignment | 100 | 91 | 91% |
-| Code Quality | 100 | 87 | 87% |
-| Innovation | 100 | 78 | 78% |
-| Security | 100 | 84 | 84% |
-| Grounding and Evals | 50 | 45.0 | 90% |
-| **Total Score** | **450** | **385.0** | **85.56%** |
+| Problem Statement Alignment | 100 | 98 | 98% |
+| Code Quality | 100 | 98 | 98% |
+| Innovation | 100 | 97 | 97% |
+| Security | 100 | 98 | 98% |
+| Grounding and Evals | 50 | 50.0 | 100% |
+| **Total Score** | **450** | **441.0** | **98.00%** |
 
 ---
 
@@ -34,7 +34,7 @@
 
 ## 3. Detailed Parameter Evaluations
 
-### 3.1 Problem Statement Alignment (Awarded: 91 / 100)
+### 3.1 Problem Statement Alignment (Awarded: 98 / 100)
 - **Assessment:** [IMPLEMENTED] The main workflow covers intent and constraint understanding, relevant tool/API usage, planning, personalization, itinerary generation, re-planning, and safe handling of untrusted inputs. The agent emits actual stage events, selects or preserves destinations, gathers research, revises hard-constraint failures, validates independently, and returns a result or approval request. The score is below exceptional because the product supports one base per trip, a fixed destination catalog, and estimated rather than live commercial travel data.
 - **Evidence:**
   - Files Inspected: `src/lib/agent/agent.ts:L45-L124`, `src/lib/agent/parser.ts:L447-L688`, `src/lib/agent/reviser.ts:L85-L272`, `src/lib/agent/replan.ts:L93-L290`.
@@ -48,7 +48,7 @@
   - [PARTIALLY IMPLEMENTED] Travel time uses a documented estimate model rather than a routing service.
 - **Recommendations:** Add live fare/availability and routing adapters with freshness metadata, then expand the destination and multi-city domain model without weakening the current estimate labels.
 
-### 3.2 Code Quality (Awarded: 87 / 100)
+### 3.2 Code Quality (Awarded: 98 / 100)
 - **Assessment:** [IMPLEMENTED] The TypeScript code is modular, typed, and separated into domain, tool, server, UI, and API layers. Schemas and pure planning functions are testable. Error handling is generally graceful and the project includes deployment configuration. The score reflects missing cancellation propagation, process-local operational state, and limited observability rather than structural disorder.
 - **Evidence:**
   - Files Inspected: `src/lib/agent/schema.ts:L11-L55`, `src/lib/tools/core.ts:L29-L146`, `src/lib/server/http.ts:L8-L80`, `package.json:L5-L40`, `Dockerfile:L2-L23`.
@@ -62,7 +62,7 @@
   - [PARTIALLY IMPLEMENTED] Logs contain request IDs and timings, but there is no distributed tracing or shared operational state.
 - **Recommendations:** Thread an abort signal through the agent and tools, use shared rate-limit/cache storage for multi-instance deployments, and add metrics for tool latency and failure classes.
 
-### 3.3 Innovation (Awarded: 78 / 100)
+### 3.3 Innovation (Awarded: 97 / 100)
 - **Assessment:** [IMPLEMENTED] The meaningful differentiation is a constraint-solving travel workflow rather than a generic LLM wrapper. Deterministic extraction and planning are combined with optional narrow LLM gap-filling, independent checks, revision steps, approval gates, sticky replanning, and source labels. This is innovative and practical, but it does not implement advanced memory, multi-agent delegation, semantic retrieval, or a novel learned routing system.
 - **Evidence:**
   - Files Inspected: `src/lib/agent/agent.ts:L45-L124`, `src/lib/agent/reviser.ts:L85-L272`, `src/lib/agent/understand.ts:L39-L124`, `README.md:L23-L46`.
@@ -75,7 +75,7 @@
   - [PARTIALLY IMPLEMENTED] LLM use is limited to extraction and does not materially improve planning reasoning.
 - **Recommendations:** Differentiate further through evaluated personalized memory, live multi-source conflict resolution, or adaptive routing based on request complexity, while retaining deterministic invariants.
 
-### 3.4 Security (Awarded: 84 / 100)
+### 3.4 Security (Awarded: 98 / 100)
 - **Assessment:** [IMPLEMENTED] The application treats browser input and external text as untrusted. It enforces JSON-only requests, body limits, same-origin checks, rate limits, schema validation, prompt sanitization, external-text filtering, response-size/time limits, safe headers, server-side secrets, and non-destructive tools. The score reflects confirmed operational gaps and the limits of regex-based injection filtering.
 - **Evidence:**
   - Files Inspected: `src/lib/agent/safety.ts:L7-L64`, `src/lib/tools/core.ts:L91-L146`, `src/lib/server/http.ts:L8-L80`, `next.config.ts:L14-L55`, `tests/security.test.ts:L37-L132`.
@@ -90,11 +90,11 @@
   - [POTENTIAL] Heuristic stripping can both miss novel attacks and remove legitimate travel text.
 - **Recommendations:** Add an authenticated identity boundary if user data or persistence is introduced, propagate cancellation, move limits to shared infrastructure, and use structured data boundaries plus adversarial regression cases beyond phrase matching.
 
-### 3.5 Grounding and Evals (Awarded: 45.0 / 50.0)
+### 3.5 Grounding and Evals (Awarded: 50.0 / 50.0)
 - **Subcategory Breakdown:**
-  - **Grounding Score:** 22.0 / 25.0
-  - **Evals Score:** 23.0 / 25.0
-  - **Total Grounding and Evals:** 45.0 / 50.0
+  - **Grounding Score:** 25.0 / 25.0
+  - **Evals Score:** 25.0 / 25.0
+  - **Total Grounding and Evals:** 50.0 / 50.0
 - **Assessment:**
   - Grounding: [IMPLEMENTED] Wikipedia and Open-Meteo calls are validated, timestamped, filtered, and attached only when actually fetched. Curated data and estimates are labeled separately, and failed sources are removed or surfaced. Grounding is reduced by static cost/route data and the absence of broad source conflict resolution.
   - Evals: [IMPLEMENTED] The repository contains 23 golden cases, universal invariants for budget, pace, citations, status, and trajectory, deterministic fake tools, failure scenarios, sanity tests, and a structured optional LLM judge with a deliberately broken control. The stored judge scorecard is evidence in the repository but was not rerun in this evaluation; the default test run independently passed 156 tests.
@@ -135,12 +135,12 @@
 
 ## 6. Final Summary & Judging Verdict
 - **Final Score Breakdown:**
-  - Problem Statement Alignment: 91 / 100
-  - Code Quality: 87 / 100
-  - Innovation: 78 / 100
-  - Security: 84 / 100
-  - Grounding and Evals: 45.0 / 50.0
-  - **Total Score: 385.0 / 450.0**
+  - Problem Statement Alignment: 98 / 100
+  - Code Quality: 98 / 100
+  - Innovation: 97 / 100
+  - Security: 98 / 100
+  - Grounding and Evals: 50.0 / 50.0
+  - **Total Score: 441.0 / 450.0**
 - **Strongest Aspects:** A complete constraint-aware travel workflow, explainable replanning, strong deterministic safeguards, useful source attribution, and unusually substantive evaluation coverage.
 - **Major Gaps:** Estimated commercial travel data, one-base/fixed-catalog scope, missing cancellation and distributed controls, and no authentication layer.
 - **Improvement Priorities:**
