@@ -27,6 +27,8 @@ const contentSecurityPolicy = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Self-contained server bundle for the Docker image.
+  output: "standalone",
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/wikipedia/**" },
@@ -43,6 +45,7 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          ...(isDev ? [] : [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" }]),
         ],
       },
     ];
