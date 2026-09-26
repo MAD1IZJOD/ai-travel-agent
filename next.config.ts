@@ -16,7 +16,7 @@ const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: https://upload.wikimedia.org",
+  "img-src 'self' data: https://upload.wikimedia.org https://thumb.wikimedia.org",
   "font-src 'self'",
   "connect-src 'self'",
   "frame-ancestors 'none'",
@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/wikipedia/**" },
+      { protocol: "https", hostname: "thumb.wikimedia.org", pathname: "/wikipedia/**" },
     ],
   },
   async headers() {

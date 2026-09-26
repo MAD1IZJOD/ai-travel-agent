@@ -214,6 +214,15 @@ export interface Adjustment {
 
 export type PlanStatus = "ok" | "revised" | "needs-approval";
 
+/** A real external lookup made while planning — shown to the user as-is. */
+export interface ToolCallRecord {
+  tool: "wikipedia" | "weather";
+  target: string;
+  status: "ok" | "failed" | "skipped" | "filtered";
+  detail: string;
+  durationMs: number;
+}
+
 export interface TripPlan {
   status: PlanStatus;
   constraints: TripConstraints;
@@ -228,6 +237,7 @@ export interface TripPlan {
   adjustments: Adjustment[];
   weather: WeatherSummary | null;
   sources: SourceRef[];
+  research: ToolCallRecord[];
   highlights: string[];
   notices: string[];
   generatedAt: string;

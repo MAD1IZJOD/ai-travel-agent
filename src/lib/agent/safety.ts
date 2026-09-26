@@ -14,7 +14,7 @@ const INJECTION_PATTERNS: RegExp[] = [
 ];
 
 /** Control, zero-width and bidi-override characters that can hide instructions. */
-const HIDDEN_CHARACTERS = new RegExp(
+export const HIDDEN_CHARACTERS = new RegExp(
   [
     [0x00, 0x08], [0x0b, 0x0c], [0x0e, 0x1f], [0x7f, 0x7f],
     [0x200b, 0x200f], [0x2028, 0x202e], [0x2060, 0x206f], [0xfeff, 0xfeff],

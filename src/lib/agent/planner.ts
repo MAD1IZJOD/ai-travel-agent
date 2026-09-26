@@ -193,6 +193,7 @@ export function buildPlan(
     adjustments: [],
     weather: null,
     sources: baseSources(place.name, place.id),
+    research: [],
     highlights,
     notices: [],
     generatedAt: new Date().toISOString(),
