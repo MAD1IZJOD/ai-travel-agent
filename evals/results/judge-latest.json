@@ -1,0 +1,108 @@
+{
+  "model": "qwen3:8b",
+  "generatedAt": "2026-09-26T09:39:28.461Z",
+  "goodAverage": 3.75,
+  "controlAverage": 1,
+  "rows": [
+    {
+      "id": "reference-request",
+      "verdict": {
+        "constraint_fit": 4,
+        "personalisation": 5,
+        "pacing": 3,
+        "practicality": 3,
+        "problems": [
+          "The estimated total cost (₹42,490) is under the budget (₹50,000), but the transport mode (bus) and overnight travel may not be included in the estimated cost, which could lead to budget overruns.",
+          "The transport mode is a bus with 14.25 hours each way and overnight travel, which is not typical for a relaxed pace. This may cause fatigue and reduce the overall experience.",
+          "The pacing is slightly packed on some days (e.g., day 5 with a 6-hour drive and 115 minutes travel time before the activity), which may not align with the 'relaxed' pace requested.",
+          "The travel time between activities on day 5 (115 minutes before the activity) is unusually long and may not be realistic for a bus journey.",
+          "The food choices are well-matched to the interests in 'nature' and 'food', but the variety could be more diverse to better reflect the stated interests."
+        ]
+      },
+      "mean": 3.75
+    },
+    {
+      "id": "group-beach-weekend",
+      "verdict": {
+        "constraint_fit": 4,
+        "personalisation": 5,
+        "pacing": 3,
+        "practicality": 3,
+        "problems": [
+          "The estimated total cost is slightly under the budget, but the plan does not account for additional expenses like accommodation, which could push the total over the budget.",
+          "The 'packed' pace is not fully reflected in the plan. Day 1 has 3 activities, which is packed, but Days 2 and 3 have fewer activities, making the overall pace inconsistent.",
+          "The travel time between activities on Day 1 is very short (only 10 minutes between Calangute–Baga beach and Tito's Lane), which may not be realistic for a 4-person group.",
+          "The 'overnight' train journey from Mumbai to Goa is 10 hours each way, which is not realistic. The actual travel time from Mumbai to Goa by train is around 12–14 hours one way, and the overnight journey would take longer than 10 hours.",
+          "The 'full' day on Day 2 includes only 2 activities, which is not very full for a 'packed' pace."
+        ]
+      },
+      "mean": 3.75
+    },
+    {
+      "id": "history-focus",
+      "verdict": {
+        "constraint_fit": 4,
+        "personalisation": 5,
+        "pacing": 4,
+        "practicality": 3,
+        "problems": [
+          "The estimated total cost (₹37,260) is under the budget (₹45,000), but the plan includes an overnight train journey from Bengaluru to Goa (11.75 hours), which may be uncomfortable for two people and could affect the overall experience.",
+          "On Day 4, there are no activities listed, which may be acceptable for a departure day, but it's not clearly indicated in the plan.",
+          "The travel time between activities on Day 3 (145 minutes to Anjuna beach) is quite long and may not be practical for a balanced pace.",
+          "The plan includes a mix of activities and food that aligns well with the stated interests in history and food, but the nightlife on Day 2 may not be suitable for all travelers."
+        ]
+      },
+      "mean": 4
+    },
+    {
+      "id": "food-focus",
+      "verdict": {
+        "constraint_fit": 4,
+        "personalisation": 4,
+        "pacing": 3,
+        "practicality": 3,
+        "problems": [
+          "The estimated total cost (₹23,510) is well within the budget (₹40,000), but the plan does not account for additional costs like accommodation, which could be significant in Amritsar.",
+          "The plan starts from Delhi and uses overnight train travel, which is appropriate for the 'from' city constraint, but the travel time (9.25 hours each way) is quite long for a train journey, which may not be ideal for a 4-day trip.",
+          "The pacing is slightly off for a 'balanced' pace. Some days have more than 3 activities (e.g., Day 1 has 2 activities, Day 3 has 2 activities, Day 4 has 1 activity, but Day 2 has 2 activities). The plan is generally balanced but could be more consistent.",
+          "The transport mode (train) is appropriate for the distance, but the overnight travel may not be ideal for a 4-day trip, especially with the need to travel to and from Amritsar.",
+          "The food choices are well aligned with the 'food' interest, but the 'spiritual' interest is not well addressed in the activities, which is a minor issue for personalisation."
+        ]
+      },
+      "mean": 3.5
+    },
+    {
+      "id": "replan-budget-down",
+      "verdict": {
+        "constraint_fit": 4,
+        "personalisation": 5,
+        "pacing": 3,
+        "practicality": 3,
+        "problems": [
+          "The estimated total cost (₹24,740) is under the budget (₹35,000), but the transport mode (bus) and overnight travel may not be included in the estimated cost, which could lead to budget overruns.",
+          "The transport mode is a bus with 14.25 hours each way and overnight travel, which is not typical for a relaxed pace. This may cause fatigue and not align with the relaxed pace requested.",
+          "The pacing is slightly packed on some days (e.g., day 5 with a 6-hour activity), which may not match the 'relaxed' pace requested.",
+          "The travel time between activities on day 5 (115 minutes) is quite long for a full day activity, which may not be practical.",
+          "The food choices are consistent with the interests in nature and food, but the variety could be more tailored to the specific interests."
+        ]
+      },
+      "mean": 3.75
+    }
+  ],
+  "control": {
+    "constraint_fit": 1,
+    "personalisation": 1,
+    "pacing": 1,
+    "practicality": 1,
+    "problems": [
+      "Total cost exceeds budget (estimatedTotalInr: 100000 vs budgetInr: 50000).",
+      "The plan does not start from Delhi as requested.",
+      "The plan does not include any activities related to nature or food, which are stated interests.",
+      "The pace is extremely packed (6 activities per day), far exceeding the requested relaxed pace (1–2 activities per day).",
+      "Activities are scheduled at 23:30 every day, which is unrealistic and would lead to extremely late hours and insufficient rest.",
+      "Transport mode is bus, but the hoursEachWay is 14.25 hours, which is not feasible for a single bus ride.",
+      "The plan includes no food activities, which is a major issue given the stated interest in food.",
+      "The plan is not logical and does not flow well; it is repetitive and lacks variety."
+    ]
+  }
+}

@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "eval": "vitest run evals",
-    "check": "npm run lint && npm run typecheck && npm test"
+    "check": "npm run lint && npm run typecheck && npm test",
+    "eval:judge": "vitest run --config vitest.judge.config.mts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
