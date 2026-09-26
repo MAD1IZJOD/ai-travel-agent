@@ -238,3 +238,25 @@ docs/ARCHITECTURE.md
 - More destinations with a data-review pipeline for the curated guide.
 - Shared state (Redis) for rate limits and caches across instances.
 - Expanding the judge to a larger model and adding human-rated reference plans.
+
+## 19. Development history
+
+The project was built in focused, incremental commits on `main`. Each milestone was tested before the next began.
+
+| # | Commit | Milestone | What it added |
+|---|---|---|---|
+| 1 | `f7d58c2` | Foundation | Next.js 16 + TypeScript app, design tokens, UI primitives, security headers, core domain types, vitest |
+| 2 | `45201f3` | Understanding | Rule-based parser for origin, destination, travellers, days, budget, interests, pace and dates; stated/interpreted/assumed labels; issue detection; optional Claude gap-filling; `/api/understand` |
+| 3 | `338c88c` | Planning engine | Curated guides for 12 destinations, documented cost/time model, door-to-door transport choice, destination ranking, pace-aware itinerary builder, budget roll-up |
+| 4 | `73b8a2b` | Grounding | Wikipedia and Open-Meteo tools with timeouts, size caps, schema checks, sanitisation, caching and rate-limit retry; verified/reference/estimated/suggestion labels |
+| 5 | `edf41fb` | Validation & replanning | Independent constraint validator, explained budget revisions, approval-gated adjustments, targeted replanning with a what-changed diff, streaming `/api/plan` |
+| 6 | `f5feb99` | Interface | Full planning UI (progress, overview, timeline, budget, checks, map, sources, change dialog, approval flow) and the optional local Qwen3 8B helper via Ollama |
+| 7 | `97aed30` | Security | Same-origin checks, body limits, rate limits, planning deadline, structured logs, `/api/health`, HSTS, Dockerfile, security tests |
+| 8 | `a3d98e2` | Evals & docs | 23-case golden evaluation set with universal invariants, sanity suite, LLM-as-a-judge, CI workflow, README and architecture docs |
+| 9 | `6e41085` | Bug fix | Fixed plans showing previous-trip data: hyphenated interests, model cold-start timeout fallback, origin echoed as destination, and a latest-request-wins guard |
+| 10 | `6a32834` | Evaluation report | Added `hack_evaluation.md`, a self-assessment against the hackathon rubric |
+| 11 | `6c6694d` | Evaluation tooling | Added the evaluation skill configuration used to produce that report |
+| 12 | `a2d3706`, `ae969f8` | Team edits | Whitespace-only edits to the README and judge config by teammates |
+| 13 | this commit | Docs | This development-history section |
+
+View the full history with `git log --oneline`.
