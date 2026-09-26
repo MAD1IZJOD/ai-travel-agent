@@ -8,11 +8,8 @@ export function SiteHeader() {
         <Link href="/" className="flex items-center gap-2 text-ink">
           <Compass className="h-5 w-5 text-lagoon" aria-hidden />
           <span className="font-display text-lg font-semibold tracking-tight">Wayfare</span>
-          <span className="rounded-full bg-lagoon/10 px-2.5 py-0.5 text-xs font-medium text-lagoon">
-            A Madhavan product
-          </span>
         </Link>
-        <p className="hidden text-sm text-ink-faint md:block">Trip planning for India, from six major cities</p>
+        <p className="hidden text-sm text-ink-faint sm:block">Trip planning for India, from six major cities</p>
       </div>
     </header>
   );
