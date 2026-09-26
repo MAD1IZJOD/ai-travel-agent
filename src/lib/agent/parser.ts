@@ -66,7 +66,7 @@ const NUMBER_WORD = `(?:${Object.keys(WORD_NUMBERS).join("|")})`;
 
 const INTEREST_KEYWORDS: Record<Interest, string[]> = {
   nature: ["nature", "natural", "mountain", "mountains", "hill", "hills", "hill station", "trek", "trekking", "hike", "hiking", "forest", "forests", "waterfall", "waterfalls", "lake", "lakes", "wildlife", "greenery", "scenic", "scenery", "outdoors", "outdoor", "tea garden", "tea gardens", "valley", "valleys", "river"],
-  food: ["food", "foodie", "cuisine", "cuisines", "eat", "eating", "street food", "restaurant", "restaurants", "culinary", "cafe", "cafes", "dishes", "dining", "biryani", "local flavours", "local flavors"],
+  food: ["food", "foodie", "cuisine", "cuisines", "eat", "eating", "street food", "restaurant", "restaurants", "culinary", "cafe", "cafes", "dishes", "dining", "biryani", "local flavours", "local flavors", "grub", "foodie trail", "street eats"],
   history: ["history", "historic", "historical", "heritage", "fort", "forts", "palace", "palaces", "monument", "monuments", "ruins", "museum", "museums", "architecture"],
   culture: ["culture", "cultural", "art", "arts", "market", "markets", "bazaar", "bazaars", "local life", "craft", "crafts", "shopping", "music", "festival", "festivals"],
   adventure: ["adventure", "adventurous", "rafting", "paragliding", "bungee", "camping", "skiing", "zipline", "zip line", "thrill", "thrilling", "kayaking", "scuba", "snorkelling", "snorkeling"],
@@ -336,9 +336,15 @@ function extractInterests(lower: string, out: ExtractedFields): void {
 }
 
 function extractPace(lower: string, out: ExtractedFields): void {
+  // "nothing hectic", "not too busy" and "no rush" all ask for a slower trip.
+  const negatedPacked = PACE_KEYWORDS.packed.some((keyword) => {
+    const match = wordRegex(keyword).exec(lower);
+    return match !== null && (isNegated(lower, match.index) || /\b(nothing|not|no)(\s+(too|so|that|very|overly))?\s+$/.test(lower.slice(Math.max(0, match.index - 16), match.index)));
+  });
   const hits = (Object.keys(PACE_KEYWORDS) as Pace[]).filter((pace) =>
-    PACE_KEYWORDS[pace].some((keyword) => wordRegex(keyword).test(lower)),
+    pace === "packed" ? !negatedPacked && PACE_KEYWORDS.packed.some((keyword) => wordRegex(keyword).test(lower)) : PACE_KEYWORDS[pace].some((keyword) => wordRegex(keyword).test(lower)),
   );
+  if (negatedPacked && !hits.includes("relaxed")) hits.unshift("relaxed");
   if (hits.length === 1) {
     out.pace = { value: hits[0], origin: "stated" };
   } else if (hits.includes("relaxed") && hits.includes("packed")) {

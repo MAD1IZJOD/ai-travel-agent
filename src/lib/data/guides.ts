@@ -123,7 +123,7 @@ export const GUIDES: Record<string, DestinationGuide> = {
     ],
     stays: {
       budget: { tier: "budget", name: "Homestay", area: "Old Manali", nightlyRate: 1_400 },
-      mid: { tier: "mid", name: "Hotel near Mall Road", area: "Mall Road", nightlyRate: 3_200 },
+      mid: { tier: "mid", name: "Hotel", area: "Mall Road", nightlyRate: 3_200 },
       comfort: { tier: "comfort", name: "Mountain-view resort", area: "Hadimba Road", nightlyRate: 7_000 },
     },
   },

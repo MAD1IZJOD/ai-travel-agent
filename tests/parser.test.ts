@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { hasBlockingIssues, parseTripRequest } from "@/lib/agent/parser";
 import { understandRequest } from "@/lib/agent/understand";
-import type { LlmFields } from "@/lib/agent/llmExtractor";
+import type { LlmFields } from "@/lib/agent/llm/fields";
 
 const today = "2026-09-26";
 const parse = (text: string) => parseTripRequest(text, { today });
@@ -166,7 +166,7 @@ describe("unsafe input", () => {
 });
 
 describe("LLM-assisted understanding", () => {
-  const llm = (fields: Partial<LlmFields>) => async (): Promise<LlmFields> => ({
+  const assistant = (fields: Partial<LlmFields>) => ({ label: "test model", extract: async (): Promise<LlmFields> => ({
     origin_city: null,
     destination: null,
     travelers: null,
@@ -177,23 +177,23 @@ describe("LLM-assisted understanding", () => {
     pace: null,
     start_date: null,
     ...fields,
-  });
+  }) });
 
   it("fills only the gaps the rules left, marked as interpreted", async () => {
-    const result = await understandRequest("Going to the hills from Delhi with the missus for a bit, nothing too hectic", {
+    const result = await understandRequest("Going to the hills from Delhi with the missus for a long week, nothing too hectic", {
       today,
-      llmExtract: llm({ origin_city: "Mumbai", travelers: 2, days: 5, pace: "relaxed", interests: ["nature"] }),
+      llm: assistant({ origin_city: "Mumbai", travelers: 2, days: 7, pace: "relaxed", interests: ["nature"] }),
     });
     expect(result.extractor).toBe("rules+llm");
     expect(result.constraints.originId).toBe("delhi"); // rules win
-    expect(result.constraints.days).toBe(5);
+    expect(result.constraints.days).toBe(7);
     expect(result.origins.days).toBe("inferred");
   });
 
   it("runs LLM values through the same validation", async () => {
-    const result = await understandRequest("trip from Delhi", {
+    const result = await understandRequest("a few days from Delhi with a big group of people, off to Narnia", {
       today,
-      llmExtract: llm({ days: -4, travelers: 500, start_date: "not-a-date", destination: "Narnia" }),
+      llm: assistant({ days: -4, travelers: 500, start_date: "not-a-date", destination: "Narnia" }),
     });
     const found = result.issues.map((i) => i.code);
     expect(found).toEqual(expect.arrayContaining(["invalid-duration", "invalid-travelers", "unsupported-destination"]));
@@ -201,8 +201,37 @@ describe("LLM-assisted understanding", () => {
   });
 
   it("falls back to rules when the LLM is unavailable", async () => {
-    const result = await understandRequest("5 days from Delhi to Jaipur", { today, llmExtract: async () => null });
+    const result = await understandRequest("5 days from Delhi to Jaipur", { today, llm: { label: "test model", extract: async () => null } });
     expect(result.extractor).toBe("rules");
     expect(result.constraints.destinationId).toBe("jaipur");
+  });
+});
+
+describe("negation and model hygiene", () => {
+  it("reads 'nothing hectic' as a relaxed pace", () => {
+    expect(parse("5 days from Delhi, nothing hectic").constraints.pace).toBe("relaxed");
+    expect(parse("5 days from Delhi, not too busy please").constraints.pace).toBe("relaxed");
+  });
+
+  it("treats a model's generic 'the hills' as an interest, not a destination", async () => {
+    const result = await understandRequest("off to the hills from Delhi with my wife for a week", {
+      today,
+      llm: {
+        label: "test model",
+        extract: async () => ({ origin_city: "Delhi", destination: "the hills", travelers: 2, days: 7, budget_inr: null, budget_is_per_person: false, interests: [], pace: null, start_date: "2026-10-01" }),
+      },
+    });
+    expect(result.issues.map((i) => i.code)).not.toContain("unsupported-destination");
+    expect(result.constraints.interests).toContain("nature");
+    expect(result.origins.startDate).toBe("default"); // no date mentioned, so the model's guess is ignored
+  });
+
+  it("adds model-found interests after the stated ones", async () => {
+    const result = await understandRequest("a week from Delhi in the mountains, good grub", {
+      today,
+      llm: { label: "test model", extract: async () => ({ origin_city: null, destination: null, travelers: null, days: null, budget_inr: null, budget_is_per_person: false, interests: ["nature", "culture"], pace: null, start_date: null }) },
+    });
+    expect(result.constraints.interests.slice(0, 2)).toEqual(["nature", "food"]);
+    expect(result.constraints.interests).toContain("culture");
   });
 });

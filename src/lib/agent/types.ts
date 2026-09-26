@@ -63,6 +63,8 @@ export interface ParsedRequest {
   issues: ParseIssue[];
   /** Which extractor produced the constraints. */
   extractor: "rules" | "rules+llm";
+  /** Name of the language model that filled gaps, when one did. */
+  assistedBy?: string;
 }
 
 /* ------------------------------------------------------------------ */
@@ -104,6 +106,9 @@ export interface PlannedActivity {
   travelMinutes: number;
   description: string;
   sourceIds: string[];
+  /** Approximate location, for the trip map. */
+  lat: number;
+  lng: number;
 }
 
 export interface FoodPick {

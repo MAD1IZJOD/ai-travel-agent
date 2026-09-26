@@ -10,6 +10,8 @@ const ALLOWED_PAGE_HOST = "en.wikipedia.org";
 const ALLOWED_IMAGE_HOSTS = new Set(["upload.wikimedia.org", "thumb.wikimedia.org"]);
 const MAX_EXTRACT_CHARS = 420;
 const MAX_IMAGE_WIDTH = 5_000;
+/** Large originals are swapped for Wikimedia's standard 1280px thumbnail — much faster to load. */
+const THUMB_WIDTH = 1_280;
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 /** Wikimedia rate-limits bursts; a few parallel requests is plenty. */
 const MAX_CONCURRENT_REQUESTS = 3;
@@ -34,6 +36,12 @@ export interface WikiSummary {
   filtered: boolean;
 }
 
+/** upload.wikimedia.org/…/commons/a/ab/File.jpg → …/commons/thumb/a/ab/File.jpg/1280px-File.jpg */
+function thumbnailOf(originalUrl: string, width: number): string | null {
+  const match = /^(https:\/\/upload\.wikimedia\.org\/wikipedia\/[a-z]+\/)([0-9a-f]\/[0-9a-f]{2}\/)([^/]+\.(?:jpe?g|png))$/i.exec(originalUrl);
+  return match ? `${match[1]}thumb/${match[2]}${match[3]}/${width}px-${match[3]}` : null;
+}
+
 /** Only allow images from Wikimedia, and drop tracking query strings. */
 function safeImageUrl(candidate: string | undefined): string | null {
   if (!candidate) return null;
@@ -44,6 +52,15 @@ function safeImageUrl(candidate: string | undefined): string | null {
   } catch {
     return null;
   }
+}
+
+function pickImage(original: { source: string; width: number } | undefined, thumbnail: string | undefined): string | null {
+  const originalUrl = safeImageUrl(original?.source);
+  if (originalUrl && original) {
+    if (original.width > THUMB_WIDTH * 1.25) return thumbnailOf(originalUrl, THUMB_WIDTH) ?? (original.width <= MAX_IMAGE_WIDTH ? originalUrl : safeImageUrl(thumbnail));
+    return originalUrl;
+  }
+  return safeImageUrl(thumbnail);
 }
 
 export type WikipediaTool = (title: string) => Promise<ToolOutcome<WikiSummary>>;
@@ -79,7 +96,7 @@ export function createWikipediaTool(fetchImpl: FetchLike, cache = new TtlCache<W
       title: parsed.data.title,
       extract: text,
       url: pageUrl.toString(),
-      imageUrl: safeImageUrl(original && original.width <= MAX_IMAGE_WIDTH ? original.source : parsed.data.thumbnail?.source),
+      imageUrl: pickImage(original, parsed.data.thumbnail?.source),
       coordinates: parsed.data.coordinates ? { lat: parsed.data.coordinates.lat, lng: parsed.data.coordinates.lon } : null,
       filtered,
     };

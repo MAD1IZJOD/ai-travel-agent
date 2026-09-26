@@ -157,7 +157,7 @@ function describeWeather(weather: WeatherData): { summary: string; notices: stri
 
   const notices: string[] = [];
   if (weather.days > 0 && weather.wetDays / weather.days >= 0.5) {
-    notices.push(weather.basis === "forecast" ? "Rain is forecast on most days — keep an indoor backup for outdoor plans." : "It rained on most of these dates last year — pack rain gear and keep plans flexible.");
+    notices.push(weather.basis === "forecast" ? `Rain is forecast on ${wet} — keep an indoor backup for outdoor plans.` : `It rained on ${wet} on these dates last year — pack rain gear and keep plans flexible.`);
   }
   if (weather.avgHighC >= HOT_DAY_C) notices.push("Expect very hot afternoons — the plan front-loads outdoor time into mornings and evenings where it can.");
   if (weather.avgLowC <= COLD_NIGHT_C) notices.push("Nights get close to freezing — pack warm layers.");

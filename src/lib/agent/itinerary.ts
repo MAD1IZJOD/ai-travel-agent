@@ -306,6 +306,8 @@ export function buildItinerary({ constraints, place, guide, windows, stay, foodT
           costInr: best.feePerPerson * constraints.travelers,
           travelMinutes: minutes,
           description: best.blurb,
+          lat: best.lat,
+          lng: best.lng,
           sourceIds: [`guide:${place.id}`, ...(best.wikiTitle ? [`wiki:${best.wikiTitle}`] : []), ...(best.feePerPerson > 0 ? ["estimate:fees"] : [])],
         });
 

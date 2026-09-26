@@ -138,7 +138,7 @@ export function validatePlan(plan: TripPlan, constraints: TripConstraints): Cons
   const wet = plan.weather && plan.weather.days > 0 && plan.weather.wetDays / plan.weather.days >= 0.5;
   checks.push(
     !guide.bestMonths.includes(month) || wet
-      ? { id: "season", label: "Season & weather", status: "warn", hard: false, detail: seasonal?.note ?? (wet ? "Expect rain on most days." : "Not the best time of year to visit.") }
+      ? { id: "season", label: "Season & weather", status: "warn", hard: false, detail: seasonal?.note ?? (wet && plan.weather ? `Rain on ${plan.weather.wetDays} of ${plan.weather.days} days ${plan.weather.basis === "forecast" ? "in the forecast" : "on these dates last year"} — keep an indoor backup.` : "Not the best time of year to visit.") }
       : { id: "season", label: "Season & weather", status: "pass", hard: false, detail: plan.weather ? plan.weather.note : "A good time of year to visit." },
   );
 
