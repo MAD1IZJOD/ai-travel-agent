@@ -9,7 +9,7 @@ export function SiteHeader() {
           <Compass className="h-5 w-5 text-lagoon" aria-hidden />
           <span className="font-display text-lg font-semibold tracking-tight">Wayfare</span>
           <span className="rounded-full bg-lagoon/10 px-2.5 py-0.5 text-xs font-medium text-lagoon">
-            a Madhavan product
+            A Madhavan product
           </span>
         </Link>
         <p className="hidden text-sm text-ink-faint md:block">Trip planning for India, from six major cities</p>
