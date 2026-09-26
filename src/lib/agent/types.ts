@@ -281,10 +281,31 @@ export interface StageEvent {
   detail: string;
 }
 
+/** Compact summary of a previous plan, sent back by the client when replanning. */
+export interface PlanSnapshot {
+  constraints: TripConstraints;
+  destinationId: string;
+  destinationName: string;
+  transportMode: TransportMode;
+  transportHours: number;
+  transportTotalInr: number;
+  stayTier: StayTier;
+  stayLabel: string;
+  budgetTotalInr: number;
+  activityIds: string[];
+  activityNames: string[];
+}
+
+export interface BlockedOutcome {
+  reason: string;
+  adjustments: Adjustment[];
+}
+
 export interface ResultEvent {
   type: "result";
-  plan: TripPlan;
+  plan: TripPlan | null;
   diff: PlanDiff | null;
+  blocked: BlockedOutcome | null;
 }
 
 export interface ErrorEvent {
