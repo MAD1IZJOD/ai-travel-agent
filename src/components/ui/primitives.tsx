@@ -85,10 +85,12 @@ export function Badge({
 }
 
 export function SectionHeading({
+  id,
   eyebrow,
   title,
   action,
 }: {
+  id?: string;
   eyebrow?: string;
   title: string;
   action?: ReactNode;
@@ -99,7 +101,7 @@ export function SectionHeading({
         {eyebrow && (
           <p className="mb-1 text-xs font-semibold tracking-[0.12em] text-ink-faint uppercase">{eyebrow}</p>
         )}
-        <h2 className="font-display text-2xl text-ink">{title}</h2>
+        <h2 id={id} className="font-display text-2xl text-ink">{title}</h2>
       </div>
       {action}
     </div>
