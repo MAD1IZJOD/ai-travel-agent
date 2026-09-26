@@ -4,6 +4,8 @@
 
 ---
 
+
+
 ## 1. What it does
 
 - **Understands** a free-text request and turns it into structured constraints — origin, destination, travellers, days, budget, interests, pace, dates — showing which values you *stated*, which were *interpreted* and which were *assumed*.
