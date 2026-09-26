@@ -112,7 +112,8 @@ function escapeRegex(value: string): string {
 }
 
 function wordRegex(phrase: string, flags = "i"): RegExp {
-  return new RegExp(`(?<![\\w-])${escapeRegex(phrase)}(?![\\w-])`, flags);
+  // A trailing hyphen is allowed so compounds like "history-focused" still match.
+  return new RegExp(`(?<![\\w-])${escapeRegex(phrase)}(?![\\w])`, flags);
 }
 
 function toNumber(token: string): number {

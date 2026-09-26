@@ -56,7 +56,9 @@ export function mergeLlmFields(rules: ExtractedFields, llm: LlmFields, text = ""
     const origin = matchByAlias(llm.origin_city, ORIGINS);
     if (origin) merged.originId = { value: origin.id, origin: "inferred" };
   }
-  if (!merged.destinationId && !merged.unknownDestination && llm.destination) {
+  // Small models often echo the departure city as the destination; that is not a destination.
+  const echoesOrigin = Boolean(llm.destination && (matchByAlias(llm.destination, ORIGINS) || (llm.origin_city && llm.destination.trim().toLowerCase() === llm.origin_city.trim().toLowerCase())));
+  if (!merged.destinationId && !merged.unknownDestination && llm.destination && !echoesOrigin) {
     const generic = GENERIC_PLACES.find((g) => g.pattern.test(llm.destination!.trim()));
     const destination = matchByAlias(llm.destination, DESTINATIONS);
     if (generic) {

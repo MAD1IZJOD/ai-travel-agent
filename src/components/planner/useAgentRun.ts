@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
+import { createLatestOnly } from "@/lib/latestOnly";
 import type { AgentEvent, AgentStage, PlanSnapshot, ResultEvent, StageEvent, TripConstraints } from "@/lib/agent/types";
 
 export type StageState = Partial<Record<AgentStage, Omit<StageEvent, "type" | "stage">>>;
@@ -17,15 +18,16 @@ const IDLE: AgentRunState = { running: false, stages: {}, result: null, error: n
 /** Runs the planning agent and follows its streamed progress events. */
 export function useAgentRun() {
   const [state, setState] = useState<AgentRunState>(IDLE);
-  const abortRef = useRef<AbortController | null>(null);
+  const [runs] = useState(createLatestOnly);
 
   const start = useCallback(async (constraints: TripConstraints, previous?: PlanSnapshot) => {
-    abortRef.current?.abort();
-    const controller = new AbortController();
-    abortRef.current = controller;
+    // A new run aborts the previous one; events from a superseded run are ignored.
+    const run = runs.next();
+    const controller = { signal: run.signal };
     setState((s) => ({ running: true, stages: {}, result: previous ? s.result : null, error: null }));
 
     const handle = (event: AgentEvent) => {
+      if (!run.isCurrent()) return;
       if (event.type === "stage") {
         setState((s) => ({ ...s, stages: { ...s.stages, [event.stage]: { status: event.status, detail: event.detail } } }));
       } else if (event.type === "result") {
@@ -41,6 +43,7 @@ export function useAgentRun() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ constraints, previous }),
         signal: controller.signal,
+        cache: "no-store",
       });
       if (!response.ok || !response.body) {
         const data = await response.json().catch(() => null);
@@ -59,21 +62,22 @@ export function useAgentRun() {
         for (const line of lines) if (line.trim()) handle(JSON.parse(line) as AgentEvent);
       }
       if (buffer.trim()) handle(JSON.parse(buffer) as AgentEvent);
+      if (!run.isCurrent()) return;
       setState((s) => (s.running ? { ...s, running: false, error: s.result ? null : "The planner stopped before finishing. Please try again." } : s));
     } catch (error) {
-      if (controller.signal.aborted) return;
+      if (controller.signal.aborted || !run.isCurrent()) return;
       setState((s) => ({
         ...s,
         running: false,
         error: error instanceof Error && error.message ? error.message : "We couldn't reach the planner. Check your connection and try again.",
       }));
     }
-  }, []);
+  }, [runs]);
 
   const reset = useCallback(() => {
-    abortRef.current?.abort();
+    runs.cancel();
     setState(IDLE);
-  }, []);
+  }, [runs]);
 
   return { ...state, start, reset };
 }

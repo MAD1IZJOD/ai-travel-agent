@@ -23,6 +23,7 @@ import { ConstraintSummary } from "./ConstraintSummary";
 import { QuickChanges } from "./QuickChanges";
 import { TripRequestForm } from "./TripRequestForm";
 import { useAgentRun } from "./useAgentRun";
+import { createLatestOnly } from "@/lib/latestOnly";
 
 /** Marks changed fields as stated and drops the issues that no longer apply. */
 export function applyEdits(parsed: ParsedRequest, next: TripConstraints): ParsedRequest {
@@ -46,6 +47,7 @@ export function TripPlanner() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const agent = useAgentRun();
   const resultsRef = useRef<HTMLDivElement>(null);
+  const [understandRequests] = useState(createLatestOnly);
 
   const plan = agent.result?.plan ?? null;
   const diff = agent.result?.diff ?? null;
@@ -57,6 +59,8 @@ export function TripPlanner() {
   }, [agent.running, agent.result]);
 
   async function understand(text: string) {
+    // Only the latest request may update the screen; an older response is dropped.
+    const ticket = understandRequests.next();
     agent.reset();
     setUnderstanding({ status: "loading", text });
     try {
@@ -64,8 +68,11 @@ export function TripPlanner() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
+        cache: "no-store",
+        signal: ticket.signal,
       });
       const data = await response.json();
+      if (!ticket.isCurrent()) return;
       if (!response.ok) throw new Error(data?.error ?? "Something went wrong.");
       const parsed = data as ParsedRequest;
       setUnderstanding({ status: "ready", text, parsed });
@@ -73,6 +80,7 @@ export function TripPlanner() {
       setEditingDetails(blocking);
       if (!blocking) agent.start(parsed.constraints);
     } catch (error) {
+      if (!ticket.isCurrent()) return;
       setUnderstanding({
         status: "error",
         text,

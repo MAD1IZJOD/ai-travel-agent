@@ -10,7 +10,7 @@ import type { FetchLike } from "@/lib/tools/core";
 import { EXTRACTION_SYSTEM_PROMPT, extractionUserMessage, llmFieldsSchema, type LlmExtractor } from "./fields";
 
 /** Covers a cold model load on a laptop; warm requests take a few seconds. */
-const DEFAULT_TIMEOUT_MS = 25_000;
+const DEFAULT_TIMEOUT_MS = 45_000;
 const MAX_RESPONSE_CHARS = 20_000;
 
 const chatResponseSchema = z.object({
