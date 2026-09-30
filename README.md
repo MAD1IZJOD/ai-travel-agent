@@ -260,3 +260,8 @@ The project was built in focused, incremental commits on `main`. Each milestone 
 | 13 | this commit | Docs | This development-history section |
 
 View the full history with `git log --oneline`.
+
+Developed with love of my teammates of hackathon winning team Nymeria 
+1. Madhavan Sahu
+2. Garv Goyal
+3. Nidhish Mathur
